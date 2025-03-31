@@ -1,0 +1,26 @@
+services:
+  discord-redirect:
+    image: traefik/whoami  # Ein einfacher Webserver zur Demo
+    labels:
+      traefik.enable: true
+
+      
+      # HTTP
+      traefik.http.routers.discord-mit-herz.rule: Host(`discord.mit-herz.org`)
+      traefik.http.routers.discord-mit-herz.entrypoints: http
+      traefik.http.routers.discord-mit-herz.middlewares: discord-mit-herz-https-redirect
+
+      traefik.http.middlewares.discord-mit-herz-https-redirect.redirectscheme.scheme: https
+      
+      
+      # HTTPS
+      traefik.http.routers.discord-mit-herz-secure.rule: Host(`discord.mit-herz.org`)
+      traefik.http.routers.discord-mit-herz-secure.entrypoints: https
+      traefik.http.routers.discord-mit-herz-secure.middlewares: discord-mit-herz
+      traefik.http.routers.discord-mit-herz-secure.tls: true
+      traefik.http.routers.discord-mit-herz-secure.tls.certresolver: http
+      
+      traefik.http.middlewares.discord-mit-herz.redirectregex.regex: ^https://discord.mit-herz.org(.*)
+      traefik.http.middlewares.discord-mit-herz.redirectregex.replacement: https://discord.gg/ZX8JtuBPQ3
+      traefik.http.middlewares.discord-mit-herz.redirectregex.permanent: true
+      

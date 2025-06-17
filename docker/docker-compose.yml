@@ -2,24 +2,22 @@ services:
   discord-redirect:
     image: traefik/whoami
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
-      start_period: 20s
-      start_interval: 5s
-      interval: 20s
-      timeout: 1m
-      retries: 3
+# No healthcheck possible: https://github.com/traefik/whoami/issues/93
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost/health"]
+#      start_period: 20s
+#      start_interval: 5s
+#      interval: 20s
+#      timeout: 1m
+#      retries: 3
     labels:
       traefik.enable: true
-
       
       # HTTP
       traefik.http.routers.discord-mit-herz.rule: Host(`discord.mit-herz.org`)
       traefik.http.routers.discord-mit-herz.entrypoints: http
       traefik.http.routers.discord-mit-herz.middlewares: discord-mit-herz-https-redirect
-
       traefik.http.middlewares.discord-mit-herz-https-redirect.redirectscheme.scheme: https
-      
       
       # HTTPS
       traefik.http.routers.discord-mit-herz-secure.rule: Host(`discord.mit-herz.org`)
